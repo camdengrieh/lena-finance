@@ -1,6 +1,5 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { Contract } from "ethers";
 
 /**
  * Deploys a contract named "YourContract" using the deployer account and
@@ -22,23 +21,24 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourContract", {
+  const autoCollectAddress = "0xf5E6B7206e7DEbc4e2558fA7667ECa2C84aBF7Fa";
+  const revenueFeeCollection = "0xE6A6F5eA01e6F7AFF1E800c8Abf64Ab6aB59b996";
+  const lpFee = "0xFb8180fDdf4F8df3967B821db8dc92D080DB0912";
+
+  await deploy("LenaLock", {
     from: deployer,
     // Contract constructor arguments
-    args: [deployer],
+    //Uniswap V3 NFT Position Manager
+    args: [autoCollectAddress, lpFee, revenueFeeCollection],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
     autoMine: true,
   });
-
-  // Get the deployed contract to interact with it after deploying.
-  const yourContract = await hre.ethers.getContract<Contract>("LenaLock", deployer);
-  console.log("👋 Initial greeting:", await yourContract.greeting());
 };
 
 export default deployYourContract;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["YourContract"];
+deployYourContract.tags = ["LenaLock"];

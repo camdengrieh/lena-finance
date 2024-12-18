@@ -29,7 +29,7 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
-        version: "0.8.20",
+        version: "0.8.28",
         settings: {
           optimizer: {
             enabled: true,
@@ -55,6 +55,10 @@ const config: HardhatUserConfig = {
         url: `https://eth-mainnet.alchemyapi.io/v2/${providerApiKey}`,
         enabled: process.env.MAINNET_FORKING_ENABLED === "true",
       },
+    },
+    unichainSepolia: {
+      url: "https://sepolia.unichain.org",
+      accounts: [deployerPrivateKey],
     },
     mainnet: {
       url: `https://eth-mainnet.alchemyapi.io/v2/${providerApiKey}`,
