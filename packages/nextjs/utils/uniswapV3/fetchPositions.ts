@@ -5,6 +5,7 @@ import { createConfig } from "wagmi";
 import { readContract } from "wagmi/actions";
 
 interface PositionInfo {
+  tokenId: bigint;
   tickLower: number;
   tickUpper: number;
   liquidity: bigint;
@@ -12,6 +13,9 @@ interface PositionInfo {
   feeGrowthInside1LastX128: bigint;
   tokensOwed0: bigint;
   tokensOwed1: bigint;
+  token0: string;
+  token1: string;
+  fee: number;
 }
 
 //TODO: Fetch address form ChainID key
@@ -43,22 +47,23 @@ export const fetchPositions = async ({
   const positionIds = [];
 
   for (let i = 0; i < Number(totalPositions); i++) {
-    const tokenForIndex = await readContract(config, {
+    const tokenId = await readContract(config, {
       ...uniPositionManagerContractConfig,
       functionName: "tokenOfOwnerByIndex",
-      args: [i],
+      args: [address, i],
     });
-    positionIds.push(tokenForIndex);
+    positionIds.push(tokenId);
   }
 
   const allPositionInfo: PositionInfo[] = [];
 
-  for (const id of positionIds) {
+  for (const tokenId of positionIds) {
     const positionInfo = await readContract(config, {
       ...uniPositionManagerContractConfig,
       functionName: "positions",
-      args: [id],
+      args: [tokenId],
     });
+
     allPositionInfo.push(positionInfo as PositionInfo);
   }
 
