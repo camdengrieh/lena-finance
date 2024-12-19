@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChainWithAttributes } from "~~/utils/scaffold-eth";
-import { fetchPositions } from "~~/utils/uniswapV3/fetchPositions";
+import { PositionInfo, fetchPositions } from "~~/utils/uniswapV3/fetchPositions";
 
 export const useFetchPositions = ({
   address,
@@ -9,12 +9,12 @@ export const useFetchPositions = ({
   address: string;
   targetNetwork: ChainWithAttributes;
 }) => {
-  const [positions, setPositions] = useState<any[]>([]);
+  const [positions, setPositions] = useState<PositionInfo[]>([]);
 
   useEffect(() => {
     const getPositions = async () => {
-      const positions = await fetchPositions({ address, targetNetwork });
-      setPositions(positions);
+      const { positions } = await fetchPositions({ address, targetNetwork });
+      setPositions(positions as PositionInfo[]);
     };
 
     getPositions();

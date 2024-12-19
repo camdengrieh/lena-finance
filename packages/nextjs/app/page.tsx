@@ -28,7 +28,7 @@ const Home: NextPage = () => {
                 </div>
               )}
               <div className="flex gap-4 justify-center">
-                <Link href="/lock" className="btn btn-primary btn-lg animate-pulse-slow">
+                <Link href="/lock/create" className="btn btn-primary btn-lg animate-pulse-slow">
                   Lock Liquidity
                 </Link>
                 <Link href="/explore" className="btn btn-outline btn-lg">

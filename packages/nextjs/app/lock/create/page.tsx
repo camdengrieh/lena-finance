@@ -1,23 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatEther } from "viem";
 import { useAccount, useWriteContract } from "wagmi";
-import { ArrowPathIcon, LockClosedIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowPathIcon, LockClosedIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { AddressInput } from "~~/components/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { useFetchPositions } from "~~/hooks/scaffold-eth/useFetchPositions";
 import scaffoldConfig from "~~/scaffold.config";
 import { notification } from "~~/utils/scaffold-eth";
+import { PositionInfo } from "~~/utils/uniswapV3/fetchPositions";
 
 const LockPage = () => {
   const [selectedNetwork, setSelectedNetwork] = useState<string>("all");
   const { address, isConnected } = useAccount();
   const { targetNetwork } = useTargetNetwork();
   const [selectedPosition, setSelectedPosition] = useState<any>(null);
-  const [owner, setOwner] = useState("");
+  const [owner, setOwner] = useState(address);
   const [collectAddress, setCollectAddress] = useState("");
   const [unlockDate, setUnlockDate] = useState("");
   const [feeName, setFeeName] = useState("DEFAULT");
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (isConnected) {
@@ -27,10 +31,12 @@ const LockPage = () => {
     }
   }, [isConnected, targetNetwork.name]);
 
-  const { positions } = useFetchPositions({
-    address: address || "",
+  const { positions }: { positions: PositionInfo[] } = useFetchPositions({
+    address: address || "0x0000000000000000000000000000000000000001",
     targetNetwork,
   });
+
+  console.log(positions);
 
   const targetNetworks = scaffoldConfig.targetNetworks;
   const networks = ["all", ...targetNetworks.map(network => network.name)]; // Extract names
@@ -67,6 +73,18 @@ const LockPage = () => {
     }
   };
 
+  const handlePositionSelect = (position: PositionInfo) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelectedPosition(position);
+      setIsTransitioning(false);
+    }, 300);
+  };
+
+  const filteredPositions = positions?.filter(position =>
+    position.pairSymbol?.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
   return (
     <div className="flex flex-col gap-6 py-8 px-4 sm:px-6 lg:px-8">
       <div className="bg-base-100 shadow-xl rounded-3xl p-6">
@@ -88,35 +106,82 @@ const LockPage = () => {
         </select>
 
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-4">Your Positions</h2>
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {positions.map((position: any) => (
-              <div
-                key={position.tokenId.toString()}
-                className={`card bg-base-200 cursor-pointer hover:bg-base-300 transition-colors ${
-                  selectedPosition?.tokenId === position.tokenId ? "border-2 border-primary" : ""
-                }`}
-                onClick={() => setSelectedPosition(position)}
+          <div className="flex items-center gap-4 mb-4">
+            {selectedPosition && (
+              <button
+                onClick={() => setSelectedPosition(null)}
+                className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity"
               >
-                <div className="card-body">
-                  <h3 className="card-title">Position #{position.tokenId.toString()}</h3>
-                  <p>Token0: {position.token0}</p>
-                  <p>Token1: {position.token1}</p>
-                  <p>Fee Tier: {position.fee / 10000}%</p>
-                  <p>Liquidity: {position.liquidity.toString()}</p>
-                </div>
-              </div>
-            ))}
+                <ArrowLeftIcon className="h-4 w-4" />
+                Back to positions
+              </button>
+            )}
+            <h2 className="text-xl font-semibold">{selectedPosition ? "Selected Position" : "Your Positions"}</h2>
           </div>
+
+          {!selectedPosition && (
+            <div className="relative mb-4">
+              <input
+                type="text"
+                placeholder="Search by pair symbol..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="input input-bordered w-full pl-10"
+              />
+              <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content opacity-60" />
+            </div>
+          )}
+
+          <div
+            className={`grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-all duration-300 ${
+              isTransitioning ? "opacity-0" : "opacity-100"
+            } ${selectedPosition ? "grid-cols-1 md:grid-cols-1 lg:grid-cols-1" : ""}`}
+          >
+            {filteredPositions?.map((position: PositionInfo) =>
+              selectedPosition ? (
+                selectedPosition.tokenId === position.tokenId && (
+                  <div key={position.tokenId} className="card bg-base-200 transition-all duration-300">
+                    <div className="card-body">
+                      <h3 className="card-title">{position.pairSymbol}</h3>
+                      <p>Fee Tier: {Number(position.fee) / 10000}%</p>
+                      <p>Liquidity: {formatEther(position.liquidity)}</p>
+                    </div>
+                  </div>
+                )
+              ) : (
+                <div
+                  key={position.tokenId}
+                  className="card bg-base-200 cursor-pointer hover:bg-base-300 transition-all duration-300 hover:scale-105"
+                  onClick={() => handlePositionSelect(position)}
+                >
+                  <div className="card-body">
+                    <h3 className="card-title">{position.pairSymbol}</h3>
+                    <p>Fee Tier: {Number(position.fee) / 10000}%</p>
+                    <p>Liquidity: {formatEther(position.liquidity)}</p>
+                  </div>
+                </div>
+              ),
+            )}
+          </div>
+
+          {!selectedPosition && filteredPositions?.length === 0 && searchQuery && (
+            <div className="text-center py-4 text-base-content opacity-60">
+              No positions found matching &quot;{searchQuery}&quot;
+            </div>
+          )}
         </div>
 
         {selectedPosition && (
           <form onSubmit={handleLock} className="flex flex-col gap-6">
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Owner Address (optional)</span>
+                <span className="label-text">Owner Address</span>
               </label>
-              <AddressInput value={owner} onChange={setOwner} placeholder="Address that will own the locked position" />
+              <AddressInput
+                value={owner as string}
+                onChange={setOwner}
+                placeholder="Address that will own the locked position"
+              />
             </div>
 
             <div className="form-control">
