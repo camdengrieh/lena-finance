@@ -28,10 +28,10 @@ const unichainSepolia = {
 const sonic = {
   id: 146,
   name: "Sonic Mainnet",
+  network: "Sonic Mainnet",
   nativeCurrency: {
     decimals: 18,
     name: "Sonic",
-    network: "Sonic Mainnet",
     symbol: "S",
   },
   rpcUrls: {
@@ -49,11 +49,8 @@ const sonic = {
 const scaffoldConfig = {
   // The networks on which your DApp is live
   targetNetworks: [
-    chains.baseSepolia,
-    chains.arbitrum,
-    chains.base,
-    chains.arbitrumSepolia,
-    unichainSepolia
+    unichainSepolia,
+    sonic
   ],
 
 } as const satisfies ScaffoldConfig;

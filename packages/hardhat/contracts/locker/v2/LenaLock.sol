@@ -177,7 +177,7 @@ contract LenaLock is
 
 	/**
     @dev converts nft to full range and collects fees and sends them back to collector
-    @param params The locking params as seen in IUNCX_ProofOfReservesV3.sol
+    @param params The locking params as seen in ILenaLock.sol
     *
     * This function will fail if a liquidity position is out of range (100% token0, 0% token1) as it will not be able to create a full range position with counter liquidity.
     * This will also fail with rebasing tokens (liquidity nfts already stuck on univ3).
@@ -305,7 +305,7 @@ contract LenaLock is
 
 	/**
     @dev collects fees and sends them back to collector
-    @param params The locking params as seen in IUNCX_ProofOfReservesV3.sol
+    @param params The locking params as seen in ILenaLock.sol
     *
     * This function will fail if a liquidity position is out of range (100% token0, 0% token1) as it will not be able to create a full range position with counter liquidity.
     * This will also fail with rebasing tokens (liquidity nfts already stuck on univ3).
@@ -397,7 +397,7 @@ contract LenaLock is
 		}
 
 		Lock memory newLock;
-		newLock.lock_id = NONCE;
+		newLock.lock_id = NONCE; //Getting Nonce from storage does not seem optimal - review this
 		newLock.nftPositionManager = params.nftPositionManager;
 		newLock.pool = pool;
 		newLock.nft_id = nftId;

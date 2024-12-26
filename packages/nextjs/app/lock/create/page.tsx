@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { formatEther } from "viem";
 import { useAccount, useWriteContract } from "wagmi";
 import { ArrowLeftIcon, ArrowPathIcon, LockClosedIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { NetworkSelector } from "~~/components/lena/NetworkSelector";
 import { AddressInput } from "~~/components/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { useFetchPositions } from "~~/hooks/scaffold-eth/useFetchPositions";
@@ -19,9 +20,10 @@ const LockPage = () => {
   const [owner, setOwner] = useState(address);
   const [collectAddress, setCollectAddress] = useState("");
   const [unlockDate, setUnlockDate] = useState("");
-  const [feeName, setFeeName] = useState("DEFAULT");
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isEditingOwner, setIsEditingOwner] = useState(false);
+  const [isEditingCollect, setIsEditingCollect] = useState(false);
 
   useEffect(() => {
     if (isConnected) {
@@ -31,7 +33,14 @@ const LockPage = () => {
     }
   }, [isConnected, targetNetwork.name]);
 
-  const { positions }: { positions: PositionInfo[] } = useFetchPositions({
+  useEffect(() => {
+    if (address) {
+      setOwner(address);
+      setCollectAddress(address);
+    }
+  }, [address]);
+
+  const { positions, isLoading }: { positions: PositionInfo[]; isLoading: boolean } = useFetchPositions({
     address: address || "0x0000000000000000000000000000000000000001",
     targetNetwork,
   });
@@ -56,7 +65,7 @@ const LockPage = () => {
         additionalCollector: "0x0000000000000000000000000000000000000000",
         collectAddress: collectAddress || address,
         unlockDate: BigInt(new Date(unlockDate).getTime() / 1000),
-        feeName,
+        feeName: "DEFAULT",
         dustRecipient: address,
         r: [],
       };
@@ -88,29 +97,20 @@ const LockPage = () => {
   return (
     <div className="flex flex-col gap-6 py-8 px-4 sm:px-6 lg:px-8">
       <div className="bg-base-100 shadow-xl rounded-3xl p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <LockClosedIcon className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-bold">Lock Uniswap V3 Position</h1>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <LockClosedIcon className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold">Lock Uniswap V3 Position</h1>
+          </div>
+          <NetworkSelector selectedNetwork={selectedNetwork} networks={networks} onChange={setSelectedNetwork} />
         </div>
 
-        <select
-          value={selectedNetwork}
-          onChange={e => setSelectedNetwork(e.target.value)}
-          className="px-4 py-2 rounded bg-base-200"
-        >
-          {networks.map(network => (
-            <option key={network} value={network}>
-              {network.charAt(0).toUpperCase() + network.slice(1)}
-            </option>
-          ))}
-        </select>
-
         <div className="mb-6">
-          <div className="flex items-center gap-4 mb-4">
+          <div className={`flex items-center gap-4 mb-4 ${selectedPosition ? "justify-center" : ""}`}>
             {selectedPosition && (
               <button
                 onClick={() => setSelectedPosition(null)}
-                className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity"
+                className="absolute left-12 flex items-center gap-2 text-primary hover:opacity-80 transition-opacity"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
                 Back to positions
@@ -132,37 +132,71 @@ const LockPage = () => {
             </div>
           )}
 
-          <div
-            className={`grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-all duration-300 ${
-              isTransitioning ? "opacity-0" : "opacity-100"
-            } ${selectedPosition ? "grid-cols-1 md:grid-cols-1 lg:grid-cols-1" : ""}`}
-          >
-            {filteredPositions?.map((position: PositionInfo) =>
-              selectedPosition ? (
-                selectedPosition.tokenId === position.tokenId && (
-                  <div key={position.tokenId} className="card bg-base-200 transition-all duration-300">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-8 gap-4">
+              <ArrowPathIcon className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-base-content opacity-60">Loading positions...</p>
+            </div>
+          ) : (
+            <div
+              className={`grid gap-4 transition-all duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"} ${
+                selectedPosition ? "grid-cols-2 max-w-4xl mx-auto" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+              }`}
+            >
+              {filteredPositions?.map((position: PositionInfo) =>
+                selectedPosition ? (
+                  selectedPosition.tokenId === position.tokenId && (
+                    <>
+                      <div key={position.tokenId} className="card bg-base-200 transition-all duration-300">
+                        <div className="card-body">
+                          <h3 className="card-title">{position.pairSymbol}</h3>
+                          <p>Fee Tier: {Number(position.fee) / 10000}%</p>
+                          <p>Liquidity: {formatEther(position.liquidity)}</p>
+                        </div>
+                      </div>
+                      <div className="card bg-base-200 transition-all duration-300">
+                        <div className="card-body">
+                          <h3 className="card-title">Lock Overview</h3>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="opacity-70">Owner:</span>
+                              <span className="font-mono">
+                                {owner?.slice(0, 6)}...{owner?.slice(-4)}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="opacity-70">Collect Address:</span>
+                              <span className="font-mono">
+                                {collectAddress
+                                  ? `${collectAddress.slice(0, 6)}...${collectAddress.slice(-4)}`
+                                  : "Not set"}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="opacity-70">Unlock Date:</span>
+                              <span>{unlockDate ? new Date(unlockDate).toLocaleDateString() : "Not set"}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )
+                ) : (
+                  <div
+                    key={position.tokenId}
+                    className="card bg-base-200 cursor-pointer hover:bg-base-300 transition-all duration-300 hover:scale-105"
+                    onClick={() => handlePositionSelect(position)}
+                  >
                     <div className="card-body">
                       <h3 className="card-title">{position.pairSymbol}</h3>
                       <p>Fee Tier: {Number(position.fee) / 10000}%</p>
                       <p>Liquidity: {formatEther(position.liquidity)}</p>
                     </div>
                   </div>
-                )
-              ) : (
-                <div
-                  key={position.tokenId}
-                  className="card bg-base-200 cursor-pointer hover:bg-base-300 transition-all duration-300 hover:scale-105"
-                  onClick={() => handlePositionSelect(position)}
-                >
-                  <div className="card-body">
-                    <h3 className="card-title">{position.pairSymbol}</h3>
-                    <p>Fee Tier: {Number(position.fee) / 10000}%</p>
-                    <p>Liquidity: {formatEther(position.liquidity)}</p>
-                  </div>
-                </div>
-              ),
-            )}
-          </div>
+                ),
+              )}
+            </div>
+          )}
 
           {!selectedPosition && filteredPositions?.length === 0 && searchQuery && (
             <div className="text-center py-4 text-base-content opacity-60">
@@ -177,22 +211,48 @@ const LockPage = () => {
               <label className="label">
                 <span className="label-text">Owner Address</span>
               </label>
-              <AddressInput
-                value={owner as string}
-                onChange={setOwner}
-                placeholder="Address that will own the locked position"
-              />
+              <div className="relative">
+                {isEditingOwner ? (
+                  <AddressInput
+                    value={owner as string}
+                    onChange={setOwner}
+                    placeholder="Address that will own the locked position"
+                  />
+                ) : (
+                  <div className="flex items-center justify-between input input-bordered bg-base-200">
+                    <span className="font-mono">
+                      {owner?.slice(0, 6)}...{owner?.slice(-4)}
+                    </span>
+                    <button type="button" onClick={() => setIsEditingOwner(true)} className="btn btn-xs btn-ghost">
+                      Edit
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Collect Address (optional)</span>
               </label>
-              <AddressInput
-                value={collectAddress}
-                onChange={setCollectAddress}
-                placeholder="Address that will collect fees"
-              />
+              <div className="relative">
+                {isEditingCollect ? (
+                  <AddressInput
+                    value={collectAddress}
+                    onChange={setCollectAddress}
+                    placeholder="Address that will collect fees"
+                  />
+                ) : (
+                  <div className="flex items-center justify-between input input-bordered bg-base-200">
+                    <span className="font-mono">
+                      {collectAddress ? `${collectAddress.slice(0, 6)}...${collectAddress.slice(-4)}` : "Not set"}
+                    </span>
+                    <button type="button" onClick={() => setIsEditingCollect(true)} className="btn btn-xs btn-ghost">
+                      Edit
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="form-control">
@@ -207,22 +267,6 @@ const LockPage = () => {
                 min={new Date().toISOString().split(".")[0]}
                 required
               />
-            </div>
-
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Fee Type</span>
-              </label>
-              <select
-                className="select select-bordered"
-                value={feeName}
-                onChange={e => setFeeName(e.target.value)}
-                required
-              >
-                <option value="DEFAULT">Default</option>
-                <option value="LVP">LVP (Lower Fee)</option>
-                <option value="LLP">LLP (Higher Fee)</option>
-              </select>
             </div>
 
             <button type="submit" className={`btn btn-primary ${isLocking ? "loading" : ""}`} disabled={isLocking}>

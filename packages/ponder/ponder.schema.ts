@@ -1,31 +1,21 @@
-import { createSchema } from "@ponder/core";
+import { onchainTable } from "ponder";
+import { zeroAddress } from "viem";
+import { Z_BEST_COMPRESSION } from "zlib";
 
-export default createSchema((p) => ({
-  BuyEvent: p.createTable({
-    id: p.string(),
-    buyer: p.string(),
-    amount: p.bigint(),
-    tokenAddress: p.string(),
-    tokenSale: p.string(),
-    timestamp: p.bigint(),
-    network: p.int(),
-  }),
-  SellEvent: p.createTable({
-    id: p.string(),
-    seller: p.string(),
-    amount: p.bigint(),
-    tokenAddress: p.string(),
-    tokenSale: p.string(),
-    timestamp: p.bigint(),
-    network: p.int(),
-  }),
-  Token: p.createTable({
-    id: p.string(),
-    tokenAddress: p.string(),
-    tokenSaleAddress: p.string(),
-    timestamp: p.bigint(),
-    lastUpdated: p.bigint().optional(),
-    network: p.int(),
-    creatorAddress: p.string(),
-  }),
-}));
+export const locks = onchainTable("locks", (t) => ({
+    id: t.text().primaryKey(),
+    lockId: t.bigint(),
+    nftPositionManager: t.hex(),
+    nftId: t.bigint(),
+    owner: t.hex(),
+    unlockDate: t.bigint(),
+    poolAddress: t.hex(),
+    pendingOwner: t.hex().default(zeroAddress),
+    // Position struct fields
+    token0: t.hex(),
+    token1: t.hex(),
+    liquidity: t.bigint(),
+    createdAt: t.bigint(),
+    network: t.integer(),
+  })
+);

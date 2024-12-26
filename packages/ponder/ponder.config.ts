@@ -1,4 +1,4 @@
-import { createConfig } from "@ponder/core";
+import { createConfig } from "ponder";
 import { http } from "viem";
 import deployedContracts from "./contracts/deployedContracts";
 import scaffoldConfig from "./scaffold.config";

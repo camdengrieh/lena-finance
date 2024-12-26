@@ -188,4 +188,9 @@ task("deploy").setAction(async (args, hre, runSuper) => {
   await generateTsAbis(hre);
 });
 
+task("generateForPonder").setAction(async hre => {
+  // Force run the generateTsAbis script
+  await generateTsAbis(hre);
+});
+
 export default config;

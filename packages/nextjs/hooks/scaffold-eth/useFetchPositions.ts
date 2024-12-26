@@ -10,15 +10,24 @@ export const useFetchPositions = ({
   targetNetwork: ChainWithAttributes;
 }) => {
   const [positions, setPositions] = useState<PositionInfo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getPositions = async () => {
-      const { positions } = await fetchPositions({ address, targetNetwork });
-      setPositions(positions as PositionInfo[]);
+      setIsLoading(true);
+      try {
+        const { positions } = await fetchPositions({ address, targetNetwork });
+        setPositions(positions as PositionInfo[]);
+      } catch (error) {
+        console.error("Error fetching positions:", error);
+        setPositions([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     getPositions();
   }, [address, targetNetwork]);
 
-  return { positions };
+  return { positions, isLoading };
 };
