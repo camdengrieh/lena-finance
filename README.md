@@ -1,4 +1,4 @@
-# 🏗 Scaffold-ETH 2
+# 🏗 Lena Finance
 
 <h4 align="center">
   <a href="https://docs.scaffoldeth.io">Documentation</a> |
@@ -27,9 +27,9 @@ Before you begin, you need to install the following tools:
 
 ## Quickstart
 
-To get started with Scaffold-ETH 2, follow the steps below:
+To get started with Lena Finance, follow the steps below:
 
-1. Install the latest version of Scaffold-ETH 2
+1. Install the latest version of Lena Finance
 
 ```
 npx create-eth@latest
@@ -77,12 +77,12 @@ Visit the [What's next section of our docs](https://docs.scaffoldeth.io/quick-st
 
 ## Documentation
 
-Visit our [docs](https://docs.scaffoldeth.io) to learn all the technical details and guides of Scaffold-ETH 2.
+Visit our [docs](https://docs.scaffoldeth.io) to learn all the technical details and guides of Lena Finance.
 
 To know more about its features, check out our [website](https://scaffoldeth.io).
 
-## Contributing to Scaffold-ETH 2
+## Contributing to Lena Finance
 
-We welcome contributions to Scaffold-ETH 2!
+We welcome contributions to Lena Finance!
 
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
+Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Lena Finance.
