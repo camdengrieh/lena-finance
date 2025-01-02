@@ -1,6 +1,5 @@
 import { onchainTable } from "ponder";
 import { zeroAddress } from "viem";
-import { Z_BEST_COMPRESSION } from "zlib";
 
 export const locks = onchainTable("locks", (t) => ({
     id: t.text().primaryKey(),
