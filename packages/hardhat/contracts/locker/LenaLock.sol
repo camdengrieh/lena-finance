@@ -10,10 +10,10 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import "../../dex/libraries/TransferHelper.sol";
+import "../dex/libraries/TransferHelper.sol";
 
-import "../univ3/TickMath.sol";
-import "../univ3/LiquidityAmounts.sol";
+import "./univ3/TickMath.sol";
+import "./univ3/LiquidityAmounts.sol";
 import {INonfungiblePositionManager} from "../../dex/UniV3/INonfungiblePositionManager.sol";
 import "./ILenaLock.sol";
 
@@ -65,6 +65,12 @@ contract LenaLock is
 	mapping(uint256 => Lock) public LOCKS;
 
 	mapping(address => EnumerableSet.UintSet) USER_LOCKS; // a set of all lock_ids owned by a user, useful for on chain enumeration.
+
+	// Mapping to track whitelisted addresses
+	mapping(address => bool) public whitelisted;
+
+	// Event for tracking whitelist changes
+	event WhitelistUpdated(address indexed account, bool isWhitelisted);
 
 	constructor(
 		address payable _autoCollectAddress,
@@ -307,12 +313,12 @@ contract LenaLock is
     @dev collects fees and sends them back to collector
     @param params The locking params as seen in ILenaLock.sol
     *
-    * This function will fail if a liquidity position is out of range (100% token0, 0% token1) as it will not be able to create a full range position with counter liquidity.
     * This will also fail with rebasing tokens (liquidity nfts already stuck on univ3).
+	* Only whitelisted platforms can use this lock mechanism, such as projects with launchpads
     */
 	function lock(
 		LockParams calldata params
-	) external payable override nonReentrant returns (uint256) {
+	) external payable override nonReentrant onlyWhitelisted returns (uint256) {
 		require(params.owner != address(0));
 		require(params.collectAddress != address(0), "COLLECT_ADDR");
 		require(
@@ -397,7 +403,7 @@ contract LenaLock is
 		}
 
 		Lock memory newLock;
-		newLock.lock_id = NONCE; //Getting Nonce from storage does not seem optimal - review this
+		newLock.lock_id = NONCE;
 		newLock.nftPositionManager = params.nftPositionManager;
 		newLock.pool = pool;
 		newLock.nft_id = nftId;
@@ -749,8 +755,6 @@ contract LenaLock is
 		delete LOCKS[_lockId]; // clear the state for this lock (reset all values to zero)
 	}
 
- 
-
 	/**
 	 * @dev allow a lock owner to add an additional address, usually a contract, to collect fees. Useful for bots
 	 */
@@ -947,5 +951,38 @@ contract LenaLock is
 		bytes calldata data
 	) public pure override returns (bytes4) {
 		return IERC721Receiver.onERC721Received.selector;
+	}
+
+	/**
+	 * @dev Modifier to restrict access to whitelisted addresses
+	 */
+	modifier onlyWhitelisted() {
+		require(whitelisted[msg.sender], "Caller is not whitelisted");
+		_;
+	}
+
+	/**
+	 * @dev Function to add or remove addresses from whitelist (only owner)
+	 */
+	function updateWhitelist(address account, bool isWhitelisted) external onlyOwner {
+		whitelisted[account] = isWhitelisted;
+		emit WhitelistUpdated(account, isWhitelisted);
+	}
+
+	/**
+	 * @dev Function to add multiple addresses to whitelist at once (only owner)
+	 */
+	function batchUpdateWhitelist(address[] calldata accounts, bool isWhitelisted) external onlyOwner {
+		for (uint256 i = 0; i < accounts.length; i++) {
+			whitelisted[accounts[i]] = isWhitelisted;
+			emit WhitelistUpdated(accounts[i], isWhitelisted);
+		}
+	}
+
+	/**
+	 * @dev Function to check if an address is whitelisted
+	 */
+	function isWhitelisted(address account) external view returns (bool) {
+		return whitelisted[account];
 	}
 }

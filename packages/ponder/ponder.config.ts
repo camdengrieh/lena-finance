@@ -1,40 +1,20 @@
 import { createConfig } from "ponder";
 import { http } from "viem";
-import deployedContracts from "./contracts/deployedContracts";
-import scaffoldConfig from "./scaffold.config";
-
-const targetNetworks = scaffoldConfig.targetNetworks;
-
-const networks = Object.fromEntries(
-  targetNetworks.map((network) => [
-    network.name,
-    {
-      chainId: network.id,
-      transport: http(process.env[`PONDER_RPC_URL_${network.id}`]),
-    },
-  ])
-);
-
-const contracts = Object.fromEntries(
-  targetNetworks.flatMap((network) => {
-    const networkContracts = deployedContracts[network.id];
-    // if the network is not in the deployedContracts, return an empty array
-    if (!networkContracts) {
-      return [];
-    }
-    return Object.keys(networkContracts).map((contractName) => [
-      `${contractName}`,
-      {
-        network: network.name,
-        abi: networkContracts[contractName].abi,
-        address: networkContracts[contractName].address,
-        startBlock: networkContracts[contractName].startBlock || 14675730,
-      },
-    ]);
-  })
-);
+import { LenaLockAbi } from "./abis/LenaLockAbi";
 
 export default createConfig({
-  networks,
-  contracts,
+  networks: {
+    baseSepolia: {
+      chainId: 84532,
+      transport: http(process.env.PONDER_RPC_URL_84532)
+    }
+  },
+  contracts: {
+    LenaLock: {
+      network: "baseSepolia",
+      abi: LenaLockAbi,
+      address: "0xC2FeF772f6c4131e96185F73505F9B44A94f1DC5" as `0x${string}`,
+      startBlock: 20344790,
+    }
+  }
 });

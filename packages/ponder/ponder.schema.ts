@@ -1,20 +1,20 @@
-import { onchainTable } from "ponder";
+import { onchainTable, primaryKey } from "ponder";
 import { zeroAddress } from "viem";
 
-export const locks = onchainTable("locks", (t) => ({
-    id: t.text().primaryKey(),
-    lockId: t.bigint(),
-    nftPositionManager: t.hex(),
-    nftId: t.bigint(),
-    owner: t.hex(),
-    unlockDate: t.bigint(),
-    poolAddress: t.hex(),
-    pendingOwner: t.hex().default(zeroAddress),
+export const lock = onchainTable("lock", (t) => ({
+    lockId: t.bigint().notNull(),
+    nftPositionManager: t.hex().notNull(),
+    nftId: t.bigint().notNull(),
+    owner: t.hex().notNull(),
+    unlockDate: t.bigint().notNull(),
+    poolAddress: t.hex().notNull(),
+    pendingOwner: t.hex().default(zeroAddress).notNull(),
     // Position struct fields
-    token0: t.hex(),
-    token1: t.hex(),
-    liquidity: t.bigint(),
-    createdAt: t.bigint(),
-    network: t.integer(),
-  })
+    token0: t.hex().notNull(),
+    token1: t.hex().notNull(),
+    liquidity: t.bigint().notNull(),
+    createdAt: t.bigint().notNull(),
+    chainId: t.integer().notNull(),
+  }),
+  (table) => ({ pk: primaryKey({ columns: [table.lockId, table.chainId] }) })
 );
