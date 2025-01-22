@@ -10,7 +10,7 @@ const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-300">
+    <div className="min-h-screen">
       <div className="flex items-center flex-col pt-10">
         {/* Hero Section */}
         <div className="hero py-8">
@@ -41,25 +41,25 @@ const Home: NextPage = () => {
 
         {/* Features Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-8 py-16 w-full max-w-7xl">
-          <div className="card bg-base-100 shadow-xl hover:scale-105 transition-transform duration-300">
+          <div className="card bg-base-100/70 backdrop-blur-sm shadow-xl hover:scale-105 transition-transform duration-300">
             <div className="card-body items-center text-center">
-              <LockClosedIcon className="h-12 w-12 text-primary mb-4" />
+              <LockClosedIcon className="h-12 w-12 text-base-content mb-4" />
               <h2 className="card-title">Secure Locking</h2>
               <p>Time-locked liquidity with automated release mechanisms and full transparency.</p>
             </div>
           </div>
 
-          <div className="card bg-base-100 shadow-xl hover:scale-105 transition-transform duration-300">
+          <div className="card bg-base-100/70 backdrop-blur-sm shadow-xl hover:scale-105 transition-transform duration-300">
             <div className="card-body items-center text-center">
-              <ShieldCheckIcon className="h-12 w-12 text-primary mb-4" />
+              <ShieldCheckIcon className="h-12 w-12 text-base-content mb-4" />
               <h2 className="card-title">Trusted Platform</h2>
               <p>Join thousands of projects that trust Lena Finance for their liquidity management.</p>
             </div>
           </div>
 
-          <div className="card bg-base-100 shadow-xl hover:scale-105 transition-transform duration-300">
+          <div className="card bg-base-100/70 backdrop-blur-sm shadow-xl hover:scale-105 transition-transform duration-300">
             <div className="card-body items-center text-center">
-              <ChartBarIcon className="h-12 w-12 text-primary mb-4" />
+              <ChartBarIcon className="h-12 w-12 text-base-content mb-4" />
               <h2 className="card-title">Analytics</h2>
               <p>Comprehensive dashboard to track your locked liquidity and upcoming releases.</p>
             </div>
@@ -67,7 +67,7 @@ const Home: NextPage = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="w-full bg-base-100 py-12">
+        <div className="w-full bg-base-100/70 backdrop-blur-sm py-12">
           <div className="stats stats-vertical lg:stats-horizontal shadow w-full max-w-4xl mx-auto">
             <div className="stat">
               <div className="stat-title">Total Value Locked</div>

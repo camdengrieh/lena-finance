@@ -99,7 +99,7 @@ const LockPage = () => {
       <div className="bg-base-100 shadow-xl rounded-3xl p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
-            <LockClosedIcon className="h-8 w-8 text-primary" />
+            <LockClosedIcon className="h-8 w-8 text-primary-content" />
             <h1 className="text-3xl font-bold">Lock Uniswap V3 Position</h1>
           </div>
           <NetworkSelector selectedNetwork={selectedNetwork} networks={networks} onChange={setSelectedNetwork} />
@@ -110,7 +110,7 @@ const LockPage = () => {
             {selectedPosition && (
               <button
                 onClick={() => setSelectedPosition(null)}
-                className="absolute left-12 flex items-center gap-2 text-primary hover:opacity-80 transition-opacity"
+                className="absolute left-12 flex items-center gap-2 text-primary-content hover:opacity-80 transition-opacity"
               >
                 <ArrowLeftIcon className="h-4 w-4" />
                 Back to positions
@@ -134,7 +134,7 @@ const LockPage = () => {
 
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-8 gap-4">
-              <ArrowPathIcon className="h-8 w-8 animate-spin text-primary" />
+              <ArrowPathIcon className="h-8 w-8 animate-spin text-primary-content" />
               <p className="text-base-content opacity-60">Loading positions...</p>
             </div>
           ) : (

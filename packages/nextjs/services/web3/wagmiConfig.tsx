@@ -1,5 +1,3 @@
-import { wagmiConnectors } from "./wagmiConnectors";
-import { getOrMapViemChain } from "@dynamic-labs/ethereum-core";
 import { Chain, createClient, fallback, http } from "viem";
 import { hardhat, mainnet } from "viem/chains";
 import { createConfig } from "wagmi";
@@ -40,11 +38,10 @@ export const customEvmNetworks = [
 // We always want to have mainnet enabled (ENS resolution, ETH price, etc). But only once.
 export const enabledChains = targetNetworks.find((network: Chain) => network.id === 1)
   ? targetNetworks
-  : ([mainnet, ...customEvmNetworks.map(getOrMapViemChain)] as const);
+  : ([...targetNetworks, mainnet] as const);
 
 export const wagmiConfig = createConfig({
   chains: enabledChains,
-  connectors: wagmiConnectors,
   ssr: true,
   client({ chain }) {
     let rpcFallbacks = [http()];

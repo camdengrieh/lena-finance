@@ -1,6 +1,7 @@
 import { ponder } from "ponder:registry";
 import { lock } from "ponder:schema";
 import { UniswapV3PoolAbi } from "../abis/UniswapV3PoolAbi";
+import { erc20Abi } from "viem";
 
 ponder.on("LenaLock:onLock", async ({ event, context }) => {
   const { network } = context;
@@ -36,11 +37,28 @@ ponder.on("LenaLock:onLock", async ({ event, context }) => {
     }),
   ]);
 
+  const [token0Symbol, token1Symbol] = await Promise.all([
+    context.client.readContract({
+      abi: erc20Abi,
+      functionName: "symbol",
+      address: token0,
+      cache: "immutable",
+    }),
+    context.client.readContract({
+      abi: erc20Abi,
+      functionName: "symbol",
+      address: token1,
+      cache: "immutable",
+    }),
+  ]);
+
   await context.db.insert(lock).values({
     lockId: lock_id,
     owner,
     token0,
     token1,
+    token0Symbol,
+    token1Symbol,
     liquidity,
     poolAddress,
     nftId: nft_id,

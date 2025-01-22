@@ -1,12 +1,18 @@
-import { createConfig } from "ponder";
-import { http } from "viem";
+import { createConfig, loadBalance, rateLimit } from "ponder";
+import { http, webSocket } from "viem";
 import { LenaLockAbi } from "./abis/LenaLockAbi";
 
 export default createConfig({
   networks: {
     baseSepolia: {
       chainId: 84532,
-      transport: http(process.env.PONDER_RPC_URL_84532)
+      transport: 
+      loadBalance([
+        http("https://base-sepolia-rpc.publicnode.com"),
+        http("https://sepolia.base.org"),
+        webSocket("wss://base-sepolia-rpc.publicnode.com"),
+        rateLimit(http(process.env.PONDER_RPC_URL_84532), { requestsPerSecond: 5 }),
+      ])
     }
   },
   contracts: {

@@ -12,6 +12,8 @@ export const lock = onchainTable("lock", (t) => ({
     // Position struct fields
     token0: t.hex().notNull(),
     token1: t.hex().notNull(),
+    token0Symbol: t.text().notNull(),
+    token1Symbol: t.text().notNull(),
     liquidity: t.bigint().notNull(),
     createdAt: t.bigint().notNull(),
     chainId: t.integer().notNull(),

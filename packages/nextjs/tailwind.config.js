@@ -10,22 +10,22 @@ module.exports = {
     themes: [
       {
         light: {
-          primary: "#A7C7E7",
-          "primary-content": "#2A303C",
-          secondary: "#F8C8DC",
-          "secondary-content": "#2A303C",
-          accent: "#C3B1E1",
-          "accent-content": "#2A303C",
-          neutral: "#2A303C",
-          "neutral-content": "#ffffff",
-          "base-100": "#ffffff",
-          "base-200": "#F7F9FC",
-          "base-300": "#E8F0FF",
-          "base-content": "#2A303C",
-          info: "#A7C7E7",
-          success: "#B4E6B0",
-          warning: "#FFE5B4",
-          error: "#FFB3B3",
+          primary: "#E6F0FF", // Light pastel blue
+          "primary-content": "#000000", // Black text
+          secondary: "#FFE6EA", // Light pastel pink
+          "secondary-content": "#000000",
+          accent: "#F0E6FF", // Light pastel purple
+          "accent-content": "#000000",
+          neutral: "#000000",
+          "neutral-content": "#FFFFFF",
+          "base-100": "#FFFFFF",
+          "base-200": "#F5F5F5",
+          "base-300": "#EBEBEB",
+          "base-content": "#000000",
+          info: "#E6F0FF",
+          success: "#E6FFE6",
+          warning: "#FFF5E6",
+          error: "#FFE6E6",
 
           "--rounded-btn": "9999rem",
 
@@ -42,22 +42,22 @@ module.exports = {
       },
       {
         dark: {
-          primary: "#8EB3D9",
-          "primary-content": "#F9FBFF",
-          secondary: "#E0B0C7",
-          "secondary-content": "#F9FBFF",
-          accent: "#A593C3",
-          "accent-content": "#F9FBFF",
-          neutral: "#F9FBFF",
-          "neutral-content": "#4A5568",
-          "base-100": "#4A5568",
-          "base-200": "#374151",
-          "base-300": "#2A303C",
-          "base-content": "#F9FBFF",
-          info: "#8EB3D9",
-          success: "#9ED49A",
-          warning: "#E6CCA0",
-          error: "#E69F9F",
+          primary: "#1A1A1A", // Very dark gray
+          "primary-content": "#FFFFFF", // White text
+          secondary: "#262626", // Dark gray
+          "secondary-content": "#FFFFFF",
+          accent: "#333333", // Medium dark gray
+          "accent-content": "#FFFFFF",
+          neutral: "#FFFFFF",
+          "neutral-content": "#000000",
+          "base-100": "#000000",
+          "base-200": "#0D0D0D",
+          "base-300": "#1A1A1A",
+          "base-content": "#FFFFFF",
+          info: "#1A1A1A",
+          success: "#1A1A1A",
+          warning: "#1A1A1A",
+          error: "#1A1A1A",
 
           "--rounded-btn": "9999rem",
 
@@ -77,6 +77,9 @@ module.exports = {
   },
   theme: {
     extend: {
+      fontFamily: {
+        future: ["Space Grotesk", "sans-serif"],
+      },
       boxShadow: {
         center: "0 0 12px -2px rgb(0 0 0 / 0.05)",
       },
