@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.28;
 
-import "../v2/ILenaLock.sol";
+import "../ILenaLock.sol";
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 
 interface IPancakeV3Pool {

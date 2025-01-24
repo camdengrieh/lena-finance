@@ -9,7 +9,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {INonfungiblePositionManager} from "../../dex/UniV3/INonfungiblePositionManager.sol";
 import {TransferHelper} from "../../dex/libraries/TransferHelper.sol";
 import {IUniswapV3Factory} from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
-import {ILenaLock} from "../v2/ILenaLock.sol";
+import {ILenaLock} from "../ILenaLock.sol";
 
 contract FullRangeConvertorV2 is IERC721Receiver, ReentrancyGuard {
 

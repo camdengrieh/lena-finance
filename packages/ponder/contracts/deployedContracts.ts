@@ -883,7 +883,8 @@ const deployedContracts = {
                   type: "uint256",
                 },
               ],
-              internalType: "struct INonfungiblePositionManager.DecreaseLiquidityParams",
+              internalType:
+                "struct INonfungiblePositionManager.DecreaseLiquidityParams",
               name: "params",
               type: "tuple",
             },
@@ -1267,7 +1268,8 @@ const deployedContracts = {
                   type: "uint256",
                 },
               ],
-              internalType: "struct INonfungiblePositionManager.IncreaseLiquidityParams",
+              internalType:
+                "struct INonfungiblePositionManager.IncreaseLiquidityParams",
               name: "params",
               type: "tuple",
             },
@@ -1762,7 +1764,8 @@ const deployedContracts = {
         pendingOwner: "@openzeppelin/contracts/access/Ownable2Step.sol",
         renounceOwnership: "@openzeppelin/contracts/access/Ownable2Step.sol",
         transferOwnership: "@openzeppelin/contracts/access/Ownable2Step.sol",
-        onERC721Received: "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+        onERC721Received:
+          "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       },
     },
   },

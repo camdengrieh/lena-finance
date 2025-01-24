@@ -4,8 +4,8 @@ import { LenaLockAbi } from "./abis/LenaLockAbi";
 
 export default createConfig({
   networks: {
-    baseSepolia: {
-      chainId: 84532,
+    sonic: {
+      chainId: 146,
       transport: 
       loadBalance([
         http("https://base-sepolia-rpc.publicnode.com"),
@@ -17,9 +17,9 @@ export default createConfig({
   },
   contracts: {
     LenaLock: {
-      network: "baseSepolia",
+      network: "sonic",
       abi: LenaLockAbi,
-      address: "0xC2FeF772f6c4131e96185F73505F9B44A94f1DC5" as `0x${string}`,
+      address: "0x848B2e4C7D0aA1391D145b3629a517EBE0EC70b9" as `0x${string}`,
       startBlock: 20344790,
     }
   }

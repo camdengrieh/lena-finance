@@ -14,7 +14,7 @@ import "../dex/libraries/TransferHelper.sol";
 
 import "./univ3/TickMath.sol";
 import "./univ3/LiquidityAmounts.sol";
-import {INonfungiblePositionManager} from "../../dex/UniV3/INonfungiblePositionManager.sol";
+import {INonfungiblePositionManager} from "../dex/UniV3/INonfungiblePositionManager.sol";
 import "./ILenaLock.sol";
 
 /*

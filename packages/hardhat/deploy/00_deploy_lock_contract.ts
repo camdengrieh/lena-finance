@@ -25,7 +25,7 @@ const deployLenaLock: DeployFunction = async function (hre: HardhatRuntimeEnviro
   const revenueFeeCollection = "0xE6A6F5eA01e6F7AFF1E800c8Abf64Ab6aB59b996";
   const lpFee = "0xFb8180fDdf4F8df3967B821db8dc92D080DB0912";
 
-  await deploy("LenaLock", {
+  const lenaLock = await deploy("LenaLock", {
     from: deployer,
     // Contract constructor arguments
     //Uniswap V3 NFT Position Manager
@@ -33,7 +33,11 @@ const deployLenaLock: DeployFunction = async function (hre: HardhatRuntimeEnviro
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
-    autoMine: true,
+  });
+
+  await hre.run("verify:verify", {
+    address: lenaLock.address,
+    constructorArguments: [autoCollectAddress, lpFee, revenueFeeCollection],
   });
 };
 

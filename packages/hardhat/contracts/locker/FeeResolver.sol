@@ -5,7 +5,7 @@ import {Ownable2Step} from "@openzeppelin/contracts/access/Ownable2Step.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {MessageHashUtils} from "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import {ILenaLock} from "./v2/ILenaLock.sol";
+import {ILenaLock} from "./ILenaLock.sol";
 
 // Allows overriding locker fees with a special promo key
 

@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.28;
 
-import "../../dex/UniV3/INonfungiblePositionManager.sol";
+import "../dex/UniV3/INonfungiblePositionManager.sol";
 
 /**
  * @dev Interface of the LENA UniswapV3 Liquidity Locker

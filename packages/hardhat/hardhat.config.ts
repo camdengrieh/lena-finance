@@ -11,16 +11,17 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import { task } from "hardhat/config";
 import generateTsAbis from "./scripts/generateTsAbis";
-import "@matterlabs/hardhat-zksync";
+//import "@matterlabs/hardhat-zksync";
 
 // If not set, it uses the hardhat account 0 private key.
 // You can generate a random account with `yarn generate` or `yarn account:import` to import your existing PK
 const deployerPrivateKey =
   process.env.__RUNTIME_DEPLOYER_PRIVATE_KEY ?? "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 // If not set, it uses our block explorers default API keys.
-const etherscanApiKey = process.env.ETHERSCAN_MAINNET_API_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
+//const etherscanApiKey = process.env.ETHERSCAN_MAINNET_API_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
 const etherscanOptimisticApiKey = process.env.ETHERSCAN_OPTIMISTIC_API_KEY || "RM62RDISS1RH448ZY379NX625ASG1N633R";
 const basescanApiKey = process.env.BASESCAN_API_KEY || "ZZZEIPMT1MNJ8526VV2Y744CA7TNZR64G6";
+const sonicApiKey = process.env.SONIC_API_KEY || "ZZZEIPMT1MNJ8526VV2Y744CA7TNZR64G6";
 
 // If not set, it uses ours Alchemy's default API key.
 // You can get your own at https://dashboard.alchemyapi.io
@@ -41,7 +42,7 @@ const config: HardhatUserConfig = {
       },
     ],
   },
-  defaultNetwork: "localhost",
+  defaultNetwork: "sonic",
   namedAccounts: {
     deployer: {
       // By default, it will take the first Hardhat account as the deployer
@@ -61,21 +62,15 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.unichain.org",
       accounts: [deployerPrivateKey],
     },
-    mainnet: {
-      url: `https://eth-mainnet.alchemyapi.io/v2/${providerApiKey}`,
+    sonic: {
+      url: "https://sonic.drpc.org",
       accounts: [deployerPrivateKey],
-    },
-    sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${providerApiKey}`,
-      accounts: [deployerPrivateKey],
-    },
-    arbitrum: {
-      url: `https://arb-mainnet.g.alchemy.com/v2/${providerApiKey}`,
-      accounts: [deployerPrivateKey],
-    },
-    arbitrumSepolia: {
-      url: `https://arb-sepolia.g.alchemy.com/v2/${providerApiKey}`,
-      accounts: [deployerPrivateKey],
+      verify: {
+        etherscan: {
+          apiUrl: "https://api.sonicscan.org",
+          apiKey: sonicApiKey,
+        },
+      },
     },
     optimism: {
       url: `https://opt-mainnet.g.alchemy.com/v2/${providerApiKey}`,
@@ -125,26 +120,9 @@ const config: HardhatUserConfig = {
       url: "https://rpc.scroll.io",
       accounts: [deployerPrivateKey],
     },
-    pgn: {
-      url: "https://rpc.publicgoods.network",
-      accounts: [deployerPrivateKey],
-    },
-    pgnTestnet: {
-      url: "https://sepolia.publicgoods.network",
-      accounts: [deployerPrivateKey],
-    },
-    celo: {
-      url: "https://forno.celo.org",
-      accounts: [deployerPrivateKey],
-    },
-    celoAlfajores: {
-      url: "https://alfajores-forno.celo-testnet.org",
-      accounts: [deployerPrivateKey],
-    },
   },
-  // configuration for harhdat-verify plugin
   etherscan: {
-    apiKey: `${etherscanApiKey}`,
+    apiKey: `${sonicApiKey}`,
     customChains: [
       {
         network: "sophonTestnet",
@@ -162,15 +140,23 @@ const config: HardhatUserConfig = {
           browserURL: "https://sophscan.xyz",
         },
       },
+      {
+        network: "sonic",
+        chainId: 146,
+        urls: {
+          apiURL: "https://api.sonicscan.org/api",
+          browserURL: "https://sonicscan.org",
+        },
+      },
     ],
   },
 
   // configuration for etherscan-verify from hardhat-deploy plugin
-  verify: {
-    etherscan: {
-      apiKey: `${etherscanApiKey}`,
-    },
-  },
+  // verify: {
+  //   etherscan: {
+  //     apiKey: `${etherscanApiKey}`,
+  //   },
+  // },
   sourcify: {
     enabled: false,
   },
@@ -180,11 +166,6 @@ const config: HardhatUserConfig = {
 task("deploy").setAction(async (args, hre, runSuper) => {
   // Run the original deploy task
   await runSuper(args);
-  // Force run the generateTsAbis script
-  await generateTsAbis(hre);
-});
-
-task("generateForPonder").setAction(async hre => {
   // Force run the generateTsAbis script
   await generateTsAbis(hre);
 });
