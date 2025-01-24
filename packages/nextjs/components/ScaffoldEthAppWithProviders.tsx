@@ -1,5 +1,6 @@
 "use client";
 
+import AnimatedBackground from "./AnimatedBackground";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
@@ -25,6 +26,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <div className="flex flex-col min-h-screen">
+        <AnimatedBackground />
         <Header />
         <main className="relative flex flex-col flex-1">{children}</main>
         <Footer />

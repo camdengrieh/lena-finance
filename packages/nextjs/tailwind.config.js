@@ -87,6 +87,7 @@ module.exports = {
         "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "fade-in-down": "fadeInDown 1s ease-out",
         "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        wave: "wave 2s linear infinite",
       },
       keyframes: {
         fadeInDown: {
@@ -98,6 +99,10 @@ module.exports = {
             opacity: "1",
             transform: "translateY(0)",
           },
+        },
+        wave: {
+          "0%": { transform: "translateX(-100%) translateY(0)" },
+          "100%": { transform: "translateX(200%) translateY(-20px)" },
         },
       },
     },

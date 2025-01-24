@@ -31,3 +31,11 @@ p {
 .btn.btn-ghost {
   @apply shadow-none;
 }
+
+[data-theme='light'] {
+  --neutral-content-color: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme='dark'] {
+  --neutral-content-color: rgba(255, 255, 255, 0.5);
+}
