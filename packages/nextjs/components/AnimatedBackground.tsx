@@ -20,8 +20,12 @@ const particleVertex = `
 `;
 
 const particleFragment = `
+  uniform bool isDarkMode;
+
   void main() {
-    gl_FragColor = vec4(1.0, 1.0, 1.0, 0.5);
+    vec4 darkColor = vec4(1.0, 1.0, 1.0, 0.5);  // White for dark mode
+    vec4 lightColor = vec4(0.0, 0.0, 0.0, 0.5);  // Black for light mode
+    gl_FragColor = isDarkMode ? darkColor : lightColor;
   }
 `;
 
@@ -48,12 +52,16 @@ const AnimatedBackground = () => {
 
     // Initialize Scene
     const scene = new THREE.Scene();
+    const isDarkMode = document.documentElement.getAttribute("data-theme") === "dark";
+    scene.background = new THREE.Color(isDarkMode ? "#000000" : "#ffffff");
+
     const camera = new THREE.PerspectiveCamera(75, config.aspectRatio, 0.01, 1000);
     camera.position.set(0, 6, 5);
 
     const renderer = new THREE.WebGLRenderer({
       canvas: config.canvas,
       antialias: true,
+      alpha: true,
     });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(config.winWidth, config.winHeight);
@@ -89,6 +97,7 @@ const AnimatedBackground = () => {
       fragmentShader: particleFragment,
       uniforms: {
         uTime: { value: 0 },
+        isDarkMode: { value: document.documentElement.getAttribute("data-theme") === "dark" },
       },
     });
 
@@ -131,11 +140,28 @@ const AnimatedBackground = () => {
     window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove);
 
+    // Add theme change observer
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === "data-theme" && sceneRef.current) {
+          const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+          sceneRef.current.particleMaterial.uniforms.isDarkMode.value = isDark;
+          sceneRef.current.scene.background = new THREE.Color(isDark ? "#000000" : "#ffffff");
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
     // Start Animation
     animate();
 
     // Cleanup
     return () => {
+      observer.disconnect();
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationFrameId);
