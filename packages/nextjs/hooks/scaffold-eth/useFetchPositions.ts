@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChainWithAttributes } from "~~/utils/scaffold-eth";
-import { PositionInfo, fetchPositions } from "~~/utils/uniswapV3/fetchPositions";
+import { PositionInfo, fetchPositions } from "~~/utils/spookySwapV3/fetchPositions";
 
 export const useFetchPositions = ({
   address,

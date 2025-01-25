@@ -1,14 +1,13 @@
-import { Chain, createClient, fallback, http } from "viem";
-import { hardhat, mainnet } from "viem/chains";
+import { Chain, http } from "viem";
+import { mainnet, sonic } from "viem/chains";
 import { createConfig } from "wagmi";
-import scaffoldConfig, { DEFAULT_ALCHEMY_API_KEY } from "~~/scaffold.config";
-import { getAlchemyHttpUrl } from "~~/utils/scaffold-eth";
+import scaffoldConfig from "~~/scaffold.config";
 
 const { targetNetworks } = scaffoldConfig;
 
 export const customEvmNetworks = [
   {
-    blockExplorerUrls: ["https://explorer.soniclabs.com/"],
+    blockExplorerUrls: ["https://sonicscan.org/"],
     chainId: 146,
     name: "Sonic Mainnet",
     iconUrls: ["https://avatars.githubusercontent.com/u/132543920?v=4"],
@@ -19,19 +18,7 @@ export const customEvmNetworks = [
       decimals: 18,
     },
     networkId: 146,
-  },
-  {
-    blockExplorerUrls: ["https://sepolia.uniscan.xyz"],
-    chainId: 1301,
-    name: "Unichain Sepolia",
-    iconUrls: ["https://avatars.githubusercontent.com/u/132543920?v=4"],
-    rpcUrls: ["https://sepolia.unichain.org"],
-    nativeCurrency: {
-      name: "ETH",
-      symbol: "ETH",
-      decimals: 18,
-    },
-    networkId: 1301,
+    vanityName: "Sonic",
   },
 ];
 
@@ -41,26 +28,11 @@ export const enabledChains = targetNetworks.find((network: Chain) => network.id 
   : ([...targetNetworks, mainnet] as const);
 
 export const wagmiConfig = createConfig({
-  chains: enabledChains,
+  chains: [sonic, mainnet],
   ssr: true,
-  client({ chain }) {
-    let rpcFallbacks = [http()];
-
-    const alchemyHttpUrl = getAlchemyHttpUrl(chain.id);
-    if (alchemyHttpUrl) {
-      const isUsingDefaultKey = scaffoldConfig.alchemyApiKey === DEFAULT_ALCHEMY_API_KEY;
-      // If using default Lena Finance API key, we prioritize the default RPC
-      rpcFallbacks = isUsingDefaultKey ? [http(), http(alchemyHttpUrl)] : [http(alchemyHttpUrl), http()];
-    }
-
-    return createClient({
-      chain,
-      transport: fallback(rpcFallbacks),
-      ...(chain.id !== (hardhat as Chain).id
-        ? {
-            pollingInterval: scaffoldConfig.pollingInterval,
-          }
-        : {}),
-    });
+  transports: {
+    [sonic.id]: http(),
+    [mainnet.id]: http(),
   },
+  multiInjectedProviderDiscovery: false,
 });

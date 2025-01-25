@@ -15,9 +15,9 @@
   },
   "dependencies": {
     "@apollo/client": "^3.12.6",
-    "@dynamic-labs/ethereum": "^4.2.2",
-    "@dynamic-labs/sdk-react-core": "^4.2.2",
-    "@dynamic-labs/wagmi-connector": "^4.2.2",
+    "@dynamic-labs/ethereum": "^4.4.0",
+    "@dynamic-labs/sdk-react-core": "^4.4.0",
+    "@dynamic-labs/wagmi-connector": "^4.4.0",
     "@heroicons/react": "^2.1.5",
     "@tanstack/react-query": "^5.62.8",
     "@types/three": "^0.172.0",

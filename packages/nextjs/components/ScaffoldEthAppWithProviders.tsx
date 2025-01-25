@@ -12,7 +12,7 @@ import { WagmiProvider } from "wagmi";
 import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
 import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
-import { wagmiConfig } from "~~/services/web3/wagmiConfig";
+import { customEvmNetworks, wagmiConfig } from "~~/services/web3/wagmiConfig";
 
 const client = new ApolloClient({
   uri: "http://localhost:42069",
@@ -50,6 +50,7 @@ export const ScaffoldEthAppWithProviders = ({ children }: { children: React.Reac
       settings={{
         environmentId: "01ac66b8-30d8-4105-b965-8a08b79e9111",
         walletConnectors: [EthereumWalletConnectors],
+        overrides: { evmNetworks: customEvmNetworks },
       }}
     >
       <WagmiProvider config={wagmiConfig}>
