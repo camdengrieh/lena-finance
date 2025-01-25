@@ -10,7 +10,7 @@ export const customEvmNetworks = [
     blockExplorerUrls: ["https://sonicscan.org/"],
     chainId: 146,
     name: "Sonic Mainnet",
-    iconUrls: ["https://avatars.githubusercontent.com/u/132543920?v=4"],
+    iconUrls: ["https://sonicscan.org/assets/sonic/images/svg/logos/chain-light.svg?v=25.1.3.1"],
     rpcUrls: ["https://rpc.soniclabs.com"],
     nativeCurrency: {
       name: "Sonic",
