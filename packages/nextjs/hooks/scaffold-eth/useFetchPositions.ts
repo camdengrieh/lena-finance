@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import { PositionInfo, fetchPositions } from "~~/utils/dex/fetchPositions";
 import { ChainWithAttributes } from "~~/utils/scaffold-eth";
-import { PositionInfo, fetchPositions } from "~~/utils/spookySwapV3/fetchPositions";
 
 export const useFetchPositions = ({
   address,
   targetNetwork,
+  selectedDex,
 }: {
   address: string;
   targetNetwork: ChainWithAttributes;
+  selectedDex: string;
 }) => {
   const [positions, setPositions] = useState<PositionInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +18,7 @@ export const useFetchPositions = ({
     const getPositions = async () => {
       setIsLoading(true);
       try {
-        const { positions } = await fetchPositions({ address, targetNetwork });
+        const { positions } = await fetchPositions({ address, targetNetwork, selectedDex });
         setPositions(positions as PositionInfo[]);
       } catch (error) {
         console.error("Error fetching positions:", error);
@@ -27,7 +29,7 @@ export const useFetchPositions = ({
     };
 
     getPositions();
-  }, [address, targetNetwork]);
+  }, [address, targetNetwork, selectedDex]);
 
   return { positions, isLoading };
 };

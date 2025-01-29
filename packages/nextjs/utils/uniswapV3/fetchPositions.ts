@@ -20,7 +20,7 @@ export interface PositionInfo {
 }
 
 //TODO: Fetch address form ChainID key
-const uniPositionManagerContractConfig = {
+export const uniPositionManagerContractConfig = {
   abi: INONFUNGIBLE_POSITION_MANAGER.abi as Abi,
   address: "0xb7f724d6dddfd008eff5cc2834edde5f9ef0d075",
 };
