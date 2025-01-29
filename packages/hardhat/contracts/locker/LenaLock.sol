@@ -73,6 +73,7 @@ contract LenaLock is
 	event WhitelistUpdated(address indexed account, bool isWhitelisted);
 
 	constructor(
+		address initialOwner,
 		address payable _autoCollectAddress,
 		address payable _lpFeeReceiver,
 		address payable _collectFeeReceiver
@@ -83,6 +84,7 @@ contract LenaLock is
 		addOrEditFee("DEFAULT", 50, 200, 0, address(0));
 		addOrEditFee("LVP", 80, 100, 0, address(0));
 		addOrEditFee("LLP", 30, 350, 0, address(0));
+		_transferOwnership(initialOwner);
 	}
 
 	function setFeeResolver(IFeeResolver _resolver) external onlyOwner {

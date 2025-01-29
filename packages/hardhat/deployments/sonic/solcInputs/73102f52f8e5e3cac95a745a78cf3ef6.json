@@ -1,0 +1,39 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/locker/LenaLockFactory.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.28;\n\ncontract LenaLockFactory {\n    event Deploy(address addr);\n\n    function deploy(bytes memory bytecode, uint256 salt) external returns (address addr) {\n        // Deploy contract using CREATE2\n        assembly {\n            addr := create2(0, add(bytecode, 0x20), mload(bytecode), salt)\n            if iszero(extcodesize(addr)) {\n                revert(0, 0)\n            }\n        }\n        emit Deploy(addr);\n    }\n\n    // Function to compute the address where the contract will be deployed\n    function computeAddress(bytes32 salt, bytes32 bytecodeHash) public view returns (address) {\n        bytes32 hash = keccak256(\n            abi.encodePacked(\n                bytes1(0xff),\n                address(this),\n                salt,\n                bytecodeHash\n            )\n        );\n        return address(uint160(uint256(hash)));\n    }\n} "
+    },
+    "contracts/locker/uncx.sol": {
+      "content": ""
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
