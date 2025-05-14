@@ -1833,6 +1833,75 @@ const deployedContracts = {
       inheritedFunctions: {},
     },
   },
+  1998991: {
+    LenaLockFactory: {
+      address: "0x848B2e4C7D0aA1391D145b3629a517EBE0EC70b9",
+      abi: [
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "address",
+              name: "addr",
+              type: "address",
+            },
+          ],
+          name: "Deploy",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "salt",
+              type: "bytes32",
+            },
+            {
+              internalType: "bytes32",
+              name: "bytecodeHash",
+              type: "bytes32",
+            },
+          ],
+          name: "computeAddress",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes",
+              name: "bytecode",
+              type: "bytes",
+            },
+            {
+              internalType: "uint256",
+              name: "salt",
+              type: "uint256",
+            },
+          ],
+          name: "deploy",
+          outputs: [
+            {
+              internalType: "address",
+              name: "addr",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
 } as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;

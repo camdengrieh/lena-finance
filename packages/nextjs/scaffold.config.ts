@@ -29,9 +29,45 @@ export const sonic = {
   },
 } as const satisfies chains.Chain;
 
+export const xphere = {
+  id: 20250217,
+  name: "Xphere Mainnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Xphere",
+    symbol: "XP",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://en-bkk.x-phere.com"],
+    },
+    public: {
+      http: ["https://en-bkk.x-phere.com"],
+    },
+  },
+} as const satisfies chains.Chain;
+
+export const xphereTestnet = {
+  id: 1998991,
+  name: "Xphere Testnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Xphere Testnet",
+    symbol: "XPT",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://en-bkk.x-phere.com"],
+    },
+    public: {
+      http: ["https://en-bkk.x-phere.com"],
+    },
+  },
+} as const satisfies chains.Chain;
+
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [chains.sonic],
+  targetNetworks: [xphere],
 
   // The interval at which your front-end polls the RPC servers for new data
   // it has no effect if you only target the local network (default is 4000)

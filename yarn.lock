@@ -6327,6 +6327,7 @@ __metadata:
     react-copy-to-clipboard: ^5.1.0
     react-dom: ^18.3.1
     react-hot-toast: ^2.4.0
+    tailwind-merge: ^3.3.0
     tailwindcss: ^3.4.11
     three: ^0.172.0
     type-fest: ^4.26.1
@@ -22266,6 +22267,13 @@ __metadata:
     string-width: ^4.2.3
     strip-ansi: ^6.0.1
   checksum: 08249c7046125d9d0a944a6e96cfe9ec66908d6b8a9db125531be6eb05fa0de047fd5542e9d43b4f987057f00a093b276b8d3e19af162a9c40db2681058fd306
+  languageName: node
+  linkType: hard
+
+"tailwind-merge@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "tailwind-merge@npm:3.3.0"
+  checksum: 9c8957753c09c5e79d490fc9d142a4d9ba1192410633d864867f5640cf5d45d06d31ea14ffcf83763a584b3202a131a2d1f1d62c47f205f598b71d8ec5071767
   languageName: node
   linkType: hard
 

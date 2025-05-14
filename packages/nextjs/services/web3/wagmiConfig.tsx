@@ -1,24 +1,39 @@
 import { Chain, http } from "viem";
-import { mainnet, sonic } from "viem/chains";
+import { mainnet } from "viem/chains";
 import { createConfig } from "wagmi";
 import scaffoldConfig from "~~/scaffold.config";
+import { xphere, xphereTestnet } from "~~/scaffold.config";
 
 const { targetNetworks } = scaffoldConfig;
 
 export const customEvmNetworks = [
   {
-    blockExplorerUrls: ["https://sonicscan.org/"],
-    chainId: 146,
-    name: "Sonic Mainnet",
-    iconUrls: ["https://sonicscan.org/assets/sonic/images/svg/logos/chain-light.svg?v=25.1.3.1"],
-    rpcUrls: ["https://rpc.soniclabs.com"],
+    blockExplorerUrls: ["https://explorer.x-phere.com/"],
+    chainId: 20250217,
+    name: "Xphere Mainnet",
+    iconUrls: [""],
+    rpcUrls: ["https://en-bkk.x-phere.com"],
     nativeCurrency: {
-      name: "Sonic",
-      symbol: "S",
+      name: "Xphere",
+      symbol: "XP",
       decimals: 18,
     },
-    networkId: 146,
-    vanityName: "Sonic",
+    networkId: 20250217,
+    vanityName: "Xphere",
+  },
+  {
+    blockExplorerUrls: ["https://explorer.x-phere.com/"],
+    chainId: 1998991,
+    name: "Xphere Testnet",
+    iconUrls: [""],
+    rpcUrls: ["https://en-bkk.x-phere.com"],
+    nativeCurrency: {
+      name: "Xphere Testnet",
+      symbol: "XPT",
+      decimals: 18,
+    },
+    networkId: 1998991,
+    vanityName: "Xphere Testnet",
   },
 ];
 
@@ -28,10 +43,11 @@ export const enabledChains = targetNetworks.find((network: Chain) => network.id 
   : ([...targetNetworks, mainnet] as const);
 
 export const wagmiConfig = createConfig({
-  chains: [sonic, mainnet],
+  chains: [...targetNetworks, mainnet],
   ssr: true,
   transports: {
-    [sonic.id]: http(),
+    [xphere.id]: http(),
+    [xphereTestnet.id]: http(),
     [mainnet.id]: http(),
   },
   multiInjectedProviderDiscovery: false,

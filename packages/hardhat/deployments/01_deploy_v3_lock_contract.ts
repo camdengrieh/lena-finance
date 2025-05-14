@@ -33,39 +33,39 @@ const deployLenaLock: DeployFunction = async function (hre: HardhatRuntimeEnviro
     log: true,
   });
 
-  // Get the bytecode for UniswapV2Locker
-  // For UniswapV2Locker, we need:
-  // 1. uniswapFactory address
-  // 2. fee address (payable)
-  const uniswapFactory = "0xE6e8DbD21B9f5994D94Ae68B2A2e5c431EF77338"; // Mainnet UniswapV2 Factory
-  const feeAddress = "0x2c0fb49C3b47E2C854B92aC5A8Aac59cbC8272b6"; // Using the lpFee address
+  // Get the bytecode for LenaLock
+  const autoCollectAddress = "0xf5E6B7206e7DEbc4e2558fA7667ECa2C84aBF7Fa";
+  const revenueFeeCollection = "0xE6a6f5ea01e7F7afF1E800C8AbF64ab6ab59B996";
+  const lpFee = "0xFb8180fDdf4F8df3967B821db8dc92D080DB0912";
 
-  const UniswapV2Locker = await ethers.getContractFactory("UniswapV2Locker");
+  const LenaLock = await ethers.getContractFactory("LenaLock");
   const bytecode =
-    UniswapV2Locker.bytecode +
-    ethers.AbiCoder.defaultAbiCoder().encode(["address", "address"], [uniswapFactory, feeAddress]).slice(2); // Remove '0x' prefix
+    LenaLock.bytecode +
+    ethers.AbiCoder.defaultAbiCoder()
+      .encode(["address", "address", "address", "address"], [owner, autoCollectAddress, lpFee, revenueFeeCollection])
+      .slice(2); // Remove '0x' prefix
 
   // Calculate deterministic address before deployment
   const factoryContract = await ethers.getContractAt("LenaLockFactory", factory.address);
-  const salt = ethers.id("LENA_LOCK_V2"); // You can change this salt as needed
+  const salt = ethers.id("LENA_LOCK_V1"); // You can change this salt as needed
   const bytecodeHash = ethers.keccak256(bytecode);
 
   const predictedAddress = await factoryContract.computeAddress(salt, bytecodeHash);
-  console.log("Predicted UniswapV2Locker address:", predictedAddress);
+  console.log("Predicted LenaLock address:", predictedAddress);
 
-  // Deploy UniswapV2Locker using the factory
+  // Deploy LenaLock using the factory
   const tx = await factoryContract.deploy(bytecode, salt);
   await tx.wait();
 
   // Verify the contract
-  //await hre.run("verify:verify", {
-  //address: predictedAddress,
-  //constructorArguments: [uniswapFactory, feeAddress],
-  //});
+  await hre.run("verify:verify", {
+    address: predictedAddress,
+    constructorArguments: [owner, autoCollectAddress, lpFee, revenueFeeCollection],
+  });
 };
 
 export default deployLenaLock;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
 // e.g. yarn deploy --tags YourContract
-deployLenaLock.tags = ["V2", "V2Lock"];
+deployLenaLock.tags = ["LenaLock", "LenaLockFactory"];

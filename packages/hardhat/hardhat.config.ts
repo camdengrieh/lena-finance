@@ -72,6 +72,14 @@ const config: HardhatUserConfig = {
         },
       },
     },
+    xphere: {
+      url: "https://en-bkk.x-phere.com",
+      accounts: [deployerPrivateKey],
+    },
+    xphereTestnet: {
+      url: "https://testnet.x-phere.com",
+      accounts: [deployerPrivateKey],
+    },
     optimism: {
       url: `https://opt-mainnet.g.alchemy.com/v2/${providerApiKey}`,
       accounts: [deployerPrivateKey],

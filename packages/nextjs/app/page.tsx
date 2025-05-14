@@ -67,7 +67,7 @@ const Home: NextPage = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="w-full bg-base-100/70 backdrop-blur-sm py-12">
+        {/* <div className="w-full bg-base-100/70 backdrop-blur-sm py-12">
           <div className="stats stats-vertical lg:stats-horizontal shadow w-full max-w-4xl mx-auto">
             <div className="stat">
               <div className="stat-title">Total Value Locked</div>
@@ -85,7 +85,7 @@ const Home: NextPage = () => {
               <div className="stat-desc">↗︎ 150 (28%)</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
